@@ -26,11 +26,13 @@ db.settings(settings)
 // firebase collections
 const usersCollection = db.collection('users')
 const peransCollection = db.collection('perans')
+const categoriesCollection = db.collection('categories')
 
 export {
     db,
     auth,
     currentUser,
     usersCollection,
-    peransCollection
+    peransCollection,
+    categoriesCollection
 }

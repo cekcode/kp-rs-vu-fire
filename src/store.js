@@ -14,7 +14,7 @@ fb.auth.onAuthStateChanged(user => {
             store.commit('setUserProfile', doc.data())
         })
         
-        // realtime updates from our posts collection
+        // realtime updates from our perans collection
         fb.peransCollection.onSnapshot(querySnapshot => {
             let peransArray = []
             querySnapshot.forEach(doc => {
@@ -25,6 +25,18 @@ fb.auth.onAuthStateChanged(user => {
 
             store.commit('setPerans', peransArray)
         })
+
+        // realtime updates from our categories collection
+        fb.categoriesCollection.onSnapshot(querySnapshot => {
+            let categoriesArray = []
+            querySnapshot.forEach(doc => {
+                let category = doc.data()
+                category.id = doc.id
+                categoriesArray.push(category)
+            })
+
+            store.commit('setCategories', categoriesArray)
+        })
     }
 })
 
@@ -33,13 +45,15 @@ export const store = new Vuex.Store({
     state: {
         currentUser: null,
         userProfile: {},
-        perans: []
+        perans: [],
+        categories: []
     },
     actions: {
         clearData({ commit }) {
             commit('setCurrentUser', null)
             commit('setUserProfile', {})
             commit('setPerans', null)
+            commit('setCategories', null)
         },
         fetchUserProfile({ commit, state }) {
             fb.usersCollection.doc(state.currentUser.uid).get().then(res => {
@@ -60,7 +74,14 @@ export const store = new Vuex.Store({
             if (val) {
                 state.perans = val
             } else {
-                state.pernas = []
+                state.perans = []
+            }
+        },
+        setCategories(state, val) {
+            if (val) {
+                state.categories = val
+            } else {
+                state.categories = []
             }
         }
     },
