@@ -32,7 +32,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-                    <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+                    <v-btn color="blue darken-1" flat @click="saveperans">Save</v-btn>
                 </v-card-actions>
                 </v-card>
                 </v-dialog>
@@ -86,6 +86,7 @@
                     <v-layout wrap>
                         <v-flex xs12 sm6 md12>
                         <v-text-field v-model="editedItemKategori.name" label="Nama Kategori"></v-text-field>
+                        <v-text-field v-model="slug" id="slug" name="slug" hidden></v-text-field>
                         </v-flex>
                     </v-layout>
                     </v-container>
@@ -185,9 +186,34 @@ export default {
         },
         formTitleKategori () {
             return this.editedIndex === -1 ? 'New Kategori' : 'Edit Kategori'
+        },
+        slug: function() {
+            var slug = this.sanitizeTitle(this.editedItem.name);
+            return slug;
         }
     },
     methods: {
+        sanitizeTitle: function(title) {
+            var slug = "";
+            // Change to lower case
+            var titleLower = title.toLowerCase();
+            // Letter "e"
+            slug = titleLower.replace(/e|é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/gi, 'e');
+            // Letter "a"
+            slug = slug.replace(/a|á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/gi, 'a');
+            // Letter "o"
+            slug = slug.replace(/o|ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/gi, 'o');
+            // Letter "u"
+            slug = slug.replace(/u|ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/gi, 'u');
+            // Letter "d"
+            slug = slug.replace(/đ/gi, 'd');
+            // Trim the last whitespace
+            slug = slug.replace(/\s*$/g, '');
+            // Change whitespace to "-"
+            slug = slug.replace(/\s+/g, '-');
+            
+            return slug;
+        },
         editItemPeran (item) {
             this.editedIndex = this.perans.indexOf(item)
             this.editedItem = Object.assign({}, item)
@@ -219,7 +245,16 @@ export default {
             this.editedIndex = -1
             }, 300)
         },
-
+        saveperans(){
+            fb.peransCollection.add({
+                name: this.editedItem.name,
+                slug: this.slug
+            }).then(ref => {
+                this.close()
+            }).catch(err => {
+                console.log(err)
+            })
+        },
         save () {
             if (this.editedIndex > -1) {
             Object.assign(this.perans[this.editedIndex], this.editedItem)
