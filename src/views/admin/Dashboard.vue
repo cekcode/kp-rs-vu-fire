@@ -1,7 +1,7 @@
 <template>
 <v-stepper v-model="e1">
     <v-stepper-header>
-      <v-stepper-step :complete="e1 > 1" step="1">Phone & Email</v-stepper-step>
+      <v-stepper-step :complete="e1 > 1" step="1">Dashboard</v-stepper-step>
 
       <v-divider></v-divider>
 
@@ -63,7 +63,7 @@
 
 <script>
   export default {
-    name: 'kontak',
+    name: 'dashboard',
     data () {
       return {
         e1: 0

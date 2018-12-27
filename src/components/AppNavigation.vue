@@ -26,10 +26,15 @@
             <v-btn flat class="hidden-sm-and-down" to="/dokter">Dokter</v-btn>
             <v-btn flat class="hidden-sm-and-down" to="/informasi">Informasi</v-btn>
             <v-btn flat class="hidden-sm-and-down" to="/kontak-kami">Kontak Kami</v-btn>
-            <v-btn flat class="hidden-sm-and-down" to="/menu">Karir</v-btn>
+            <v-btn flat class="hidden-sm-and-down" to="/karir">Karir</v-btn>
             <v-spacer class="hidden-sm-and-down"></v-spacer>
-            <div class="hidden-sm-and-down">
-                <v-btn color="blue darken-2" @click="dialog = true">Buku Tamu</v-btn>
+            <div v-if="!isAuthenticated" class="hidden-sm-and-down">
+                <v-btn flat to="/login">SIGN IN</v-btn>
+                <v-btn color="blue-grey darken-3" to="/join">JOIN</v-btn>
+                <v-btn color="blue-grey darken-3" @click="dialog = true">Buku Tamu</v-btn>
+            </div>
+            <div class="hidden-sm-and-down" v-else>
+                <v-btn outline color="light darken-2" @click="logout">Logout</v-btn>
             </div>
         </v-toolbar>
 
@@ -84,10 +89,12 @@
 </template>
 
 <script>
+const fb = require('../firebaseConfig.js')
 export default {
     name: 'AppNavigation',
     data() {
         return {
+            checkbox:'',
             appTitle: 'RS.Brayat Minulya',
             dialog: false,
             drawer: false,
@@ -97,9 +104,24 @@ export default {
                 { icon:'people', title: 'Dokter',to:'/dokter' },
                 { icon:'assignment', title: 'Informasi' ,to:'/informasi'},
                 { icon:'contacts', title: 'Kontak Kami' ,to:'/kontak-kami' },
-                { icon:'work', title: 'Karir' ,to:'/profile'}
+                { icon:'work', title: 'Karir' ,to:'/karir'}
             ]
         };
+    },
+    computed: {
+        isAuthenticated() {
+            return this.$store.getters.isAuthenticated;
+        }
+    },
+    methods: {
+        logout() {
+            fb.auth.signOut().then(() => {
+                this.$store.dispatch('clearData')
+                this.$router.push('/login')
+            }).catch(err => {
+                console.log(err)
+            })
+        }
     }
 };
 </script>
