@@ -48,12 +48,44 @@ const router = new Router({
             component: () => import('./views/Join.vue')
         },
         {
-            path: '/admin',
-            name: 'dashboard',
+            path: '/admin/dashboard',
+            name: 'admin-dashboard',
             meta: {
                 requiresAuth: true
             },
             component: () => import('./views/admin/Dashboard.vue')
+        },
+        {
+            path: '/admin/profile',
+            name: 'admin-profile',
+            meta: {
+                requiresAuth: true
+            },
+            component: () => import('./views/admin/Profile.vue')
+        },
+        {
+            path: '/admin/daftar-dokter',
+            name: 'admin-daftar-dokter',
+            meta: {
+                requiresAuth: true
+            },
+            component: () => import('./views/admin/DaftarDokter.vue')
+        },
+        {
+            path: '/admin/jadwal-dokter',
+            name: 'admin-jadwal-dokter',
+            meta: {
+                requiresAuth: true
+            },
+            component: () => import('./views/admin/JadwalDokter.vue')
+        },
+        {
+            path: '/admin/peran-dan-kategori',
+            name: 'peran-dan-kategori',
+            meta: {
+                requiresAuth: true
+            },
+            component: () => import('./views/admin/PeranDanKategori.vue')
         }
     ]
 });

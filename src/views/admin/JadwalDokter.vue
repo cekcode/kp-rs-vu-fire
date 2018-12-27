@@ -1,85 +1,39 @@
 <template>
-  <v-layout justify-center>
-    <v-flex xs12 sm10>
-    <v-card>
-        <v-container
-          fluid
-          grid-list-md
-        >
-          <v-layout row wrap>
-            <v-flex 
-              v-for="card in cards"
-              v-bind="{ [`xs${card.flex}`]: true }"
-              :key="card.title"
-            >
-              <v-card align="center" class="text-md-center">
-                <v-img
-                  :src="card.src"
-                  height="200px" width="350px"
-                >
-                  <v-container
-                    fill-height
-                    fluid
-                    pa-2
-                  >
-
-                  </v-container>
-                </v-img>
-
-                <v-card-actions>
-                    <strong>{{card.title}}</strong>
-                </v-card-actions>
-              </v-card>
-            </v-flex>
-          </v-layout>
-            <div class="text-xs-center">
-                <v-pagination
-                v-model="cards"
-                :length="4"
-                circle
-                ></v-pagination>
-            </div>
-        </v-container>
-      </v-card>
-
-      <v-card>
-        <v-data-table
-                :headers="headers"
-                :items="desserts"
-                class="elevation-1"
-            >
-                <template slot="items" slot-scope="props">
-                <td>{{ props.item.name }}</td>
-                <td class="text-xs-right">{{ props.item.jen }}</td>
-                <td class="text-xs-right">{{ props.item.calories }}</td>
-                <td class="text-xs-right">{{ props.item.fat }}</td>
-                <td class="text-xs-right">{{ props.item.carbs }}</td>
-                <td class="text-xs-right">{{ props.item.protein }}</td>
-                <td class="text-xs-right">{{ props.item.iron }}</td>
-                <td class="text-xs-right">{{ props.item.sab }}</td>
-                </template>
-            </v-data-table>
-        </v-card>
-    </v-flex>
-
-  </v-layout>
+<v-container fluid fill-height>
+    <v-layout justify-center>
+        <v-flex xs12 sm10>
+            <v-card>
+                <v-btn color="blue darken-3" medium dark>Tambah Jadwal Dokter</v-btn>
+                <v-data-table
+                        :headers="headers"
+                        :items="desserts"
+                        class="elevation-1"
+                    >
+                        <template slot="items" slot-scope="props">
+                        <td>{{ props.item.name }}</td>
+                        <td class="text-xs-right">{{ props.item.jen }}</td>
+                        <td class="text-xs-right">{{ props.item.calories }}</td>
+                        <td class="text-xs-right">{{ props.item.fat }}</td>
+                        <td class="text-xs-right">{{ props.item.carbs }}</td>
+                        <td class="text-xs-right">{{ props.item.protein }}</td>
+                        <td class="text-xs-right">{{ props.item.iron }}</td>
+                        <td class="text-xs-right">{{ props.item.sab }}</td>
+                        <td class="text-xs-right"><v-btn color="orange" fab small><v-icon>edit</v-icon></v-btn></td>
+                        <td class="text-xs-right"><v-btn color="red" fab small><v-icon>delete</v-icon></v-btn></td>
+                        </template>
+                    </v-data-table>
+                </v-card>
+        </v-flex>
+    </v-layout>
+</v-container>
 </template>
 
 <script>
-export default {
-    name:'dokter',
-    data(){
-        return{
-            page: 1,
-            cards:[
-                {src: 'http://source.unsplash.com/0BhSKStVtdM',title:'Dr. Favorite road trips'},
-                {src: 'http://source.unsplash.com/0BhSKStVtdM',title:'Dr. Favorite trips'},
-                {src: 'http://source.unsplash.com/0BhSKStVtdM',title:'Dr. Favorite trips'},
-                {src: 'http://source.unsplash.com/0BhSKStVtdM',title:'Dr. Favorite road trips'},
-                {src: 'http://source.unsplash.com/0BhSKStVtdM',title:'Dr. Favorite'},
-                {src: 'http://source.unsplash.com/0BhSKStVtdM',title:'Dr. Favorite road trips'}
-            ],
-            headers: [
+  export default {
+    name: 'admin-jadwal-dokter',
+    data () {
+      return {
+          headers: [
             {
                 text: 'Nama Dokter',
                 align: 'left',
@@ -92,7 +46,9 @@ export default {
             { text: 'Rabu', value: 'carbs' },
             { text: 'Kamis', value: 'protein' },
             { text: 'Jumat', value: 'iron' },
-            { text: 'Sabtu', value: 'sab' }
+            { text: 'Sabtu', value: 'sab' },
+            { text: 'Edit' , value: 'edit'},
+            { text: 'Hapus', value: 'hapus' }
             ],
             desserts: [
             {
@@ -206,7 +162,7 @@ export default {
                 sab : '14.00'
             }
             ]
-        }
+      }
     }
-}
+  }
 </script>

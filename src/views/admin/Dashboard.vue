@@ -1,72 +1,34 @@
 <template>
-<v-stepper v-model="e1">
-    <v-stepper-header>
-      <v-stepper-step :complete="e1 > 1" step="1">Dashboard</v-stepper-step>
-
-      <v-divider></v-divider>
-
-      <v-stepper-step :complete="e1 > 2" step="2">Lokasi</v-stepper-step>
-
-      <v-divider></v-divider>
-
-      <v-stepper-step step="3">Sosial Media</v-stepper-step>
-    </v-stepper-header>
-
-    <v-stepper-items>
-      <v-stepper-content step="1">
-        <v-card
-          class="mb-5"
-          color="grey lighten-1"
-          height="200px"
-        ></v-card>
-
-        <v-btn
-          color="primary"
-          @click="e1 = 2"
+<v-container fluid fill-height>
+   <v-layout justify-center align-center>
+    <v-flex xl12>
+      <v-timeline>
+        <v-timeline-item
+          v-for="n in 4"
+          :key="n"
+          color="red lighten-2"
+          large
         >
-          Selanjutnya
-        </v-btn>
-      </v-stepper-content>
-
-      <v-stepper-content step="2">
-        <v-card
-          class="mb-5"
-          color="grey lighten-1"
-          height="200px"
-        ></v-card>
-
-        <v-btn
-          color="primary"
-          @click="e1 = 3"
-        >
-          Selanjutnya
-        </v-btn>
-      </v-stepper-content>
-
-      <v-stepper-content step="3">
-        <v-card
-          class="mb-5"
-          color="grey lighten-1"
-          height="200px"
-        ></v-card>
-
-        <v-btn
-          color="primary"
-          @click="e1 = 1"
-        >
-          Kembali ke Awal
-        </v-btn>
-      </v-stepper-content>
-    </v-stepper-items>
-  </v-stepper>
+          <span slot="opposite">Tus eu perfecto</span>
+          <v-card class="elevation-2">
+            <v-card-title class="headline">Lorem ipsum</v-card-title>
+            <v-card-text>
+              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.
+            </v-card-text>
+          </v-card>
+        </v-timeline-item>
+      </v-timeline>
+    </v-flex>
+  </v-layout>
+</v-container>
 </template>
 
 <script>
   export default {
-    name: 'dashboard',
+    name: 'admin-dashboard',
     data () {
       return {
-        e1: 0
+          
       }
     }
   }

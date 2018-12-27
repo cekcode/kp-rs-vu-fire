@@ -89,7 +89,7 @@ export default {
                 this.$store.commit('setCurrentUser', credential.user)
                 this.$store.dispatch('fetchUserProfile')
                 this.performingRequest = false
-                this.$router.push('/admin')
+                this.$router.push('/admin/dashboard')
             }).catch(err => {
                 console.log(err)
                 this.performingRequest = false

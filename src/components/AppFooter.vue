@@ -1,6 +1,6 @@
 <template>
 <section>
-    <v-footer
+    <v-footer v-if="!isAuthenticated"
     dark
     height="auto" class="blue darken-3"
   >
@@ -73,6 +73,11 @@ export default {
     data(){
         return{
             icons: 'fa-instagram'
+        }
+    },
+    computed: {
+        isAuthenticated() {
+            return this.$store.getters.isAuthenticated;
         }
     }
 };

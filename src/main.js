@@ -4,7 +4,7 @@ import App from './App.vue';
 import router from './router';
 import { store } from './store.js'
 import VuePaginate from 'vue-paginate';
-const fb = require('./firebaseConfig.js')
+const fb = require('./firebaseConfig.js');
 
 Vue.use(VuePaginate);
 Vue.config.productionTip = false;
