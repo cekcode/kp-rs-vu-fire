@@ -221,12 +221,6 @@ export default {
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
-
-        deleteItemPeran (item) {
-            const index = this.perans.indexOf(item)
-            confirm('Kamu yakin ingin menghapus ini?') && this.perans.splice(index, 1)
-        },
-
         editItemKategori (item) {
             this.editedIndex = this.categories.indexOf(item)
             this.editedItemKategori = Object.assign({}, item)
@@ -269,6 +263,33 @@ export default {
                     console.log(err)
                 })
             }
+        },
+        deleteItemPeran (item) {
+            var self = this;
+            self.$swal({
+                title: "Yakin Hapus Peran "+item.name+" ?",
+                text: "Data akan dihapus permanen!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                closeOnConfirm: true
+            }).then((isConfirm) => {
+                if(isConfirm) {
+                fb.peransCollection.doc(item.id).delete().then((res) => {
+                    self.$swal({
+                        title: "Berhasil!",
+                        text: "Berhasil Menghapus Peran "+item.name,
+                        icon: "success",
+                    });
+                    return true;
+                    }).catch((error) => {
+                        alert("Error removing document: ", error);
+                    });
+                }else {
+                    return false;
+                }
+            });
+            
         },
         save () {
             if (this.editedIndex > -1) {
