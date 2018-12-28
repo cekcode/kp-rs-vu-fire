@@ -23,7 +23,9 @@
                     <v-container grid-list-md>
                     <v-layout wrap>
                         <v-flex xs12 sm6 md12>
+                        <input v-model="editedItem.id" hidden>
                         <v-text-field v-model="editedItem.name" label="Nama Peran"></v-text-field>
+                        <input v-model="slug" id="slug" name="slug" hidden>
                         </v-flex>
                     </v-layout>
                     </v-container>
@@ -86,7 +88,6 @@
                     <v-layout wrap>
                         <v-flex xs12 sm6 md12>
                         <v-text-field v-model="editedItemKategori.name" label="Nama Kategori"></v-text-field>
-                        <v-text-field v-model="slug" id="slug" name="slug" hidden></v-text-field>
                         </v-flex>
                     </v-layout>
                     </v-container>
@@ -158,6 +159,7 @@ export default {
             ],
             editedIndex: -1,
             editedItem: {
+                id:'',
                 name: ''
             },
             defaultItem: {
@@ -246,14 +248,27 @@ export default {
             }, 300)
         },
         saveperans(){
-            fb.peransCollection.add({
-                name: this.editedItem.name,
-                slug: this.slug
-            }).then(ref => {
-                this.close()
-            }).catch(err => {
-                console.log(err)
-            })
+            if (this.editedIndex > -1) {
+                fb.peransCollection.doc(this.editedItem.id).set({
+                    name: this.editedItem.name,
+                    slug: this.slug
+                }).then((ref) => {
+                    this.close()
+                    Object.assign(this.perans[this.editedIndex], this.editedItem)
+                 })
+                .catch((error) => {
+                    alert("Error adding document: ", error);
+                });
+            } else {
+                fb.peransCollection.add({
+                    name: this.editedItem.name,
+                    slug: this.slug
+                }).then(ref => {
+                    this.close()
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
         },
         save () {
             if (this.editedIndex > -1) {
