@@ -12,7 +12,7 @@
                 ></v-divider>
                 <v-spacer></v-spacer>
                 <v-dialog v-model="dialog" max-width="500px">
-                    <v-btn slot="activator" color="primary" dark class="mb-2">New Peran</v-btn>
+                    <v-btn slot="activator" color="primary" dark class="mb-2" disabled hidden>New Peran</v-btn>
                 <v-card>
                 <v-card-title>
                     <span class="headline">{{ formTitlePeran }}</span>
@@ -46,10 +46,10 @@
                 <template slot="items" slot-scope="props">
                     <td>{{ props.item.name }}</td>
                     <td class="justify-center layout px-0">
-                    <v-icon small class="mr-2" @click="editItemPeran(props.item)">
+                    <v-icon small class="mr-2" @click="editItemPeran(props.item)" disabled hidden>
                         edit
                     </v-icon>
-                    <v-icon small @click="deleteItemPeran(props.item)">
+                    <v-icon small @click="deleteItemPeran(props.item)" disabled hidden>
                         delete
                     </v-icon>
                     </td>
@@ -181,7 +181,7 @@ export default {
                             querySnapshot.forEach(function(doc) {
                                     // console.log(doc.id, " => ", doc.data());
                                      fb.categoriesCollection.doc(doc.id).delete().then((res) => {
-                                        
+                                        console.log(doc.id);
                                      }).catch(function(error) {
                                         console.log("Error getting documents: ", error);
                                         });
@@ -195,8 +195,6 @@ export default {
                             }).catch(function(error) {
                             console.log("Error getting documents: ", error);
                             });
-
-                        
                     }).catch((error) => {
                         self.$swal({
                             title: "Oops...!",

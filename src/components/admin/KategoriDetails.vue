@@ -1,7 +1,7 @@
 <template>
 <v-container fluid fill-height>
     <v-layout justify-center>
-        <v-flex xs12>
+        <v-flex xs12> 
             <v-card>
                 <v-toolbar flat color="white">
                 <v-toolbar-title>Kategori</v-toolbar-title>
@@ -11,41 +11,54 @@
                     vertical
                 ></v-divider>
                 <v-spacer></v-spacer>
+                <v-progress-circular
+                v-if="performingRequest"
+                :size="70"
+                color="primary"
+                indeterminate
+                ></v-progress-circular>
+                <div v-if="errorMsg !== ''" class="red--text text--darken-3">
+                    <p>{{ errorMsg }}</p>
+                </div>
                 <v-dialog v-model="dialog" max-width="500px">
                     <v-btn slot="activator" color="primary" dark class="mb-2">New Kategori</v-btn>
                 <v-card>
-                <v-card-title>
-                    <span class="headline">{{ formTitleKategori }}</span>
-                </v-card-title>
+                <v-form @submit.prevent ref="form" v-model="valid" lazy-validation>
+                    <v-card-title>
+                        <span class="headline">{{ formTitleKategori }}</span>
+                    </v-card-title>
 
-                <v-card-text>
-                    <v-container grid-list-md>
-                    <v-layout wrap>
-                        <input v-model="editedItemKategori.id" hidden>
-                        <v-flex xs12 sm6 md12>
-                          <v-text-field v-model="editedItemKategori.name" label="Nama Kategori"></v-text-field>
-                        </v-flex>
-                        <input v-model="slug" id="slug" name="slug" hidden>
-                        <v-flex xs12 sm6 md12>
-                            <v-select
-                            v-model="editedItemKategori.peran"
-                            :items="perans"
-                            item-text="name"
-                            item-value="perans"
-                            label="Pilih Peran"
-                            persistent-hint
-                            return-object
-                            single-line
-                            ></v-select>
-                        </v-flex>
-                    </v-layout>
-                    </v-container>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-                    <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
-                </v-card-actions>
+                    <v-card-text>
+                        <v-container grid-list-md>
+                        <v-layout wrap>
+                            <input v-model="editedItemKategori.id" hidden>
+                            <v-flex xs12 sm6 md12>
+                            <v-text-field v-model="editedItemKategori.name" label="Nama Kategori" :rules="nameRules"></v-text-field>
+                            </v-flex>
+                            <input v-model="slug" id="slug" name="slug" hidden>
+                            <v-flex xs12 sm6 md12>
+                                <v-select
+                                v-model="editedItemKategori.peran"
+                                :items="perans"
+                                item-text="name"
+                                item-value="perans"
+                                label="Pilih Peran"
+                                persistent-hint
+                                return-object
+                                single-line
+                                required
+                                :rules="peranRules"></v-select>
+                            </v-flex>
+                        </v-layout>
+                        </v-container>
+                    </v-card-text>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+                            <v-btn color="blue darken-1" flat @click="save" :disabled="!valid">Save</v-btn>
+                        </v-card-actions>
+                    </v-form>
                 </v-card>
                 </v-dialog>
                 </v-toolbar>
@@ -58,10 +71,10 @@
                     <td>{{ props.item.name }}</td>
                     <td>{{ props.item.peran.name }}</td>
                     <td class="justify-center layout px-0">
-                    <v-icon small class="mr-2" @click="editItemKategori(props.item)">
+                    <v-icon color="orange" small class="mr-2" @click="editItemKategori(props.item)">
                         edit
                     </v-icon>
-                    <v-icon small @click="deleteItemKategori(props.item)">
+                    <v-icon color="red" small @click="deleteItemKategori(props.item)">
                         delete
                     </v-icon>
                     </td>
@@ -84,16 +97,25 @@ export default {
     name: 'KategoriDetails',
     data () {
         return {
+            performingRequest: false,
+            errorMsg: '',
+            nameRules: [
+                v => !!v || 'Nama Kategori kosong'
+            ],
+            peranRules: [
+                v => !!v || 'Peran kosong'
+            ],
+            valid: true,
             dialog: false,
             headercategories: [
                 {
                 text: 'Nama Kategori',
                 align: 'left',
-                sortable: false,
+                // sortable: false,
                 value: 'name'
                 },
-                { text: 'Terhubung ke peran', value: 'Terhubung ke peran', sortable: false },
-                { text: '', value: 'name', sortable: false }
+                { text: 'Terhubung ke peran', sortable: false,value: 'Terhubung ke peran' },
+                { text: '', sortable: false }
             ],
             editedIndex: -1,
             defaultSelect:{
@@ -117,7 +139,7 @@ export default {
                 name: '',
                 peran:{
                     id: '',
-                    name:'Pilih Peran'
+                    name:''
                 }
             }
         }
@@ -166,6 +188,7 @@ export default {
         },
         close () {
             this.dialog = false
+            this.$refs.form.reset()
             setTimeout(() => {
             this.editedItemKategori = Object.assign({}, this.defaultItemKategori)
             this.select = Object.assign({}, this.defaultSelect)
@@ -173,7 +196,10 @@ export default {
             }, 300)
         },
         save () {
+        if (this.$refs.form.validate()) {
+            var self = this
             if (this.editedIndex > -1) {
+                this.performingRequest = true;
                 fb.categoriesCollection.doc(this.editedItemKategori.id).set({
                     name: this.editedItemKategori.name,
                     slug: this.slug,
@@ -182,13 +208,21 @@ export default {
                         name:this.editedItemKategori.peran.name
                     }
                 }).then((ref) => {
+                    this.performingRequest = false;
                     this.close()
+                    self.$swal({
+                        title: "Success!",
+                        text: "Edit Kategori "+this.editedItemKategori.name,
+                        icon: "success"
+                    });
                     Object.assign(this.categories[this.editedIndex], this.editedItemKategori)
                  })
                 .catch((error) => {
+                    this.performingRequest = false;
                     alert("Error adding document: ", error);
                 });
             } else {
+                this.performingRequest = true;
                 // console.log(this.select.name)
                 fb.categoriesCollection.add({
                     name: this.editedItemKategori.name,
@@ -199,13 +233,22 @@ export default {
                     }
                     
                 }).then(ref => {
+                    this.performingRequest = false;
                     this.close()
+                    self.$swal({
+                        title: "Success!",
+                        text: "Kategori Baru"+this.editedItemKategori.name,
+                        icon: "success"
+                    });
                 }).catch(err => {
+                    this.performingRequest = false;
                     console.log(err)
                 })
             }
+        }
         },
         deleteItemKategori(item) {
+            this.performingRequest = true;
             var self = this
             self.$swal({
                 title: "Delete "+item.name+" ?",
@@ -222,6 +265,7 @@ export default {
                         text: "Delete Kategori "+item.name,
                         icon: "success"
                     });
+                    this.performingRequest = false;
                     return true;
                     }).catch((error) => {
                         self.$swal({
@@ -229,9 +273,11 @@ export default {
                             text: error,
                             type: "error"
                         });
+                        this.performingRequest = false;
                     });
                 }
                 else{
+                    this.performingRequest = false;
                     return false;
                 }
             });
