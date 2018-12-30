@@ -71,10 +71,10 @@
                     <td>{{ props.item.name }}</td>
                     <td>{{ props.item.peran.name }}</td>
                     <td class="justify-center layout px-0">
-                    <v-icon color="orange" small class="mr-2" @click="editItemKategori(props.item)">
+                    <v-icon color="orange" medium class="mr-2" @click="editItemKategori(props.item)">
                         edit
                     </v-icon>
-                    <v-icon color="red" small @click="deleteItemKategori(props.item)">
+                    <v-icon color="red" medium @click="deleteItemKategori(props.item)">
                         delete
                     </v-icon>
                     </td>
@@ -248,7 +248,6 @@ export default {
         }
         },
         deleteItemKategori(item) {
-            this.performingRequest = true;
             var self = this
             self.$swal({
                 title: "Delete "+item.name+" ?",
@@ -259,6 +258,7 @@ export default {
                 closeOnConfirm: true
             }).then((isConfirm) => {
                 if(isConfirm){
+                this.performingRequest = true;
                 fb.categoriesCollection.doc(item.id).delete().then((res) => {
                     self.$swal({
                         title: "Success!",

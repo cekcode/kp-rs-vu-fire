@@ -220,7 +220,7 @@ export default {
                 text: 'Informasi',
                 children: [
                     { icon: 'class', text: 'Peran & Kategori' , to: '/admin/peran-dan-kategori'},
-                    { icon: 'receipt', text: 'Posts' }
+                    { icon: 'receipt', text: 'Posts', to: '/admin/post'}
                 ]
                 },
                 {

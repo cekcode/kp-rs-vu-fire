@@ -86,6 +86,22 @@ const router = new Router({
                 requiresAuth: true
             },
             component: () => import('./views/admin/PeranDanKategori.vue')
+        },
+        {
+            path: '/admin/post',
+            name: 'post',
+            meta: {
+                requiresAuth: true
+            },
+            component: () => import('./views/admin/Post.vue')
+        },
+        {
+            path: '/admin/post/new',
+            name: 'post-new',
+            meta: {
+                requiresAuth: true
+            },
+            component: () => import('./components/admin/PostNew.vue')
         }
     ]
 });

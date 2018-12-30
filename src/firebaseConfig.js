@@ -15,6 +15,7 @@ firebase.initializeApp(config)
 // firebase utils
 const db = firebase.firestore()
 const auth = firebase.auth()
+const firestorage = firebase.storage()
 const currentUser = auth.currentUser
 
 // date issue fix according to firebase
@@ -28,9 +29,11 @@ const usersCollection = db.collection('users')
 const peransCollection = db.collection('perans')
 const categoriesCollection = db.collection('categories')
 
+
 export {
     db,
     auth,
+    firestorage,
     currentUser,
     usersCollection,
     peransCollection,
