@@ -1,9 +1,9 @@
-import firebase from 'firebase'
-import 'firebase/firestore'
+import firebase from 'firebase';
+import 'firebase/firestore';
 
 // firebase init goes here
 const config = {
-	apiKey: "AIzaSyDttXJ0CcYQJ6wFe6xQaDDqAbhlP05O00Y",
+    apiKey: "AIzaSyDttXJ0CcYQJ6wFe6xQaDDqAbhlP05O00Y",
     authDomain: "rs-brayat.firebaseapp.com",
     databaseURL: "https://rs-brayat.firebaseio.com",
     projectId: "rs-brayat",
@@ -13,23 +13,22 @@ const config = {
 firebase.initializeApp(config)
 
 // firebase utils
-const db = firebase.firestore()
-const auth = firebase.auth()
-const firestorage = firebase.storage()
-const currentUser = auth.currentUser
+const db = firebase.firestore();
+const auth = firebase.auth();
+const firestorage = firebase.storage();
+const currentUser = auth.currentUser;
 
 // date issue fix according to firebase
 const settings = {
     timestampsInSnapshots: true
-}
-db.settings(settings)
+};
+db.settings(settings);
 
 // firebase collections
-const usersCollection = db.collection('users')
-const peransCollection = db.collection('perans')
-const categoriesCollection = db.collection('categories')
-
-
+const usersCollection = db.collection('users');
+const peransCollection = db.collection('perans');
+const categoriesCollection = db.collection('categories');
+const postsCollection = db.collection('posts');
 export {
     db,
     auth,
@@ -37,5 +36,6 @@ export {
     currentUser,
     usersCollection,
     peransCollection,
-    categoriesCollection
-}
+    categoriesCollection,
+    postsCollection
+};

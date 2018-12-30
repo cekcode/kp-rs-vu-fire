@@ -114,7 +114,7 @@ export default {
                 // sortable: false,
                 value: 'name'
                 },
-                { text: 'Terhubung ke peran', sortable: false,value: 'Terhubung ke peran' },
+                { text: 'Terhubung ke peran' ,value: 'peran.name' },
                 { text: '', sortable: false }
             ],
             editedIndex: -1,

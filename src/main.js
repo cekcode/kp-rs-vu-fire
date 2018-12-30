@@ -9,6 +9,7 @@ import VueSwal from 'vue-swal';
 
 Vue.use(VueSwal)
 Vue.use(VuePaginate);
+
 Vue.config.productionTip = false;
 
 let app

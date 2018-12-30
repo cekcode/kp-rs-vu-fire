@@ -6,14 +6,14 @@
                 <v-btn color="blue darken-3" medium dark to="/admin/post/new">Tambah Post</v-btn>
                 <v-data-table
                         :headers="headers"
-                        :items="desserts"
+                        :items="posts"
                         class="elevation-1"
                     >
                         <template slot="items" slot-scope="props">
                         <td>{{ props.item.name }}</td>
-                        <td class="text-xs-left justify-center">{{ props.item.category }}</td>
-                        <td class="text-xs-left justify-center">{{ props.item.createdOn }}</td>
-                        <td class="text-xs-left justify-center">{{ props.item.updatedOn }}</td>
+                        <td class="text-xs-left justify-center">{{ props.item.category.name }}</td>
+                        <td class="text-xs-left justify-center">{{ props.item.createdOn | formatDate}}</td>
+                        <td class="text-xs-left justify-center">{{ props.item.updatedOn | formatDate}}</td>
                         <td class="justify-center layout px-0">
                             <v-icon color="black" medium class="mr-2" >
                                 zoom_in
@@ -34,6 +34,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import moment from 'moment';
+const fb = require('@/firebaseConfig.js');
+
   export default {
     name: 'post',
     data () {
@@ -47,21 +51,22 @@
                 {
                     text: 'Kategori',
                     align: 'left',
-                    sortable: false,
-                    value: 'category'
+                    value: 'category.name'
                 },
                 { text: 'Di Buat', value: 'createdOn' },
                 { text: 'Di Update', value: 'updatedOn' },
-                { text: '' }],
-            desserts: [
-            {
-                value: false,
-                name: 'Cara membuat makanan bayi',
-                category: 'Artikel',
-                createdOn: '11/12/2018',
-                updatedOn: '11/12/2018'
-            }]
+                { text: '' }]
       }
+    },
+    computed: {
+        ...mapState(['currentUser','posts']),
+    },
+    filters: {
+        formatDate(val) {
+            if (!val) { return '-' }
+            let date = val.toDate()
+            return moment(date).fromNow()
+        }
     }
   }
 </script>
