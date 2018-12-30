@@ -15,7 +15,7 @@
                     <v-flex xs12 class="text-xs-center text-sm-center text-md-center text-lg-center">
                         <v-btn
                         @click.native="selectFile"
-                        v-if="!uploadEnd && !uploading">
+                        v-if="!uploadEnd && !uploading && First == false">
                             Upload Gambar Utama
                             <v-icon
                             right
@@ -41,10 +41,15 @@
                             color="primary">
                             %
                         </v-progress-circular>
+
                         <img
                             v-if="uploadEnd"
                             :src="downloadURL"
                             width="100%" />
+                        <img
+                            v-if="First == true" width="100%" height="300px"
+                            :src="this.editedItem.images" />
+                            
                         <div v-if="uploadEnd">
                             <v-btn
                             class="ma-0"
@@ -56,6 +61,21 @@
                             Delete
                             </v-btn>
                         </div>
+
+                        <div v-if="First == true">
+                            <v-btn
+                            class="ma-0"
+                            dark
+                            small
+                            color="error"
+                            v-on:click="deleteImageFirst(editedItem.images)"
+                            >
+                            Delete
+                            </v-btn>
+                        </div>
+
+
+
                     </v-flex>
                     <v-flex xs12>
                         <v-text-field
@@ -122,6 +142,7 @@ const fb = require('@/firebaseConfig.js');
         progressUpload: 0,
         fileName: '',
         uploadTask: '',
+        First: true,
         uploading: false,
         uploadEnd: false,
         downloadURL: '',
@@ -185,8 +206,24 @@ const fb = require('@/firebaseConfig.js');
             console.error(`file delete error occured: ${error}`)
             })
         },
+        deleteImageFirst(){
+            var self = this
+            self.First = false
+            fb.postsCollection.doc(this.$route.params.id).get().then(doc => {
+            let post = doc.data()
+                let imageURL = post.images;
+                var desertRef = firestorage.refFromURL(imageURL);
+                desertRef.delete().then(function() {
+                    console.log('sukses')
+                }).catch(function(error) {
+                    console.log(`Gagal: ${error}`)
+                });
+            }).catch(err => {
+                console.log(err)
+            })
+        },
         getDownloadUrl (v) {
-        this.imgUrl = v
+            this.imgUrl = v
         },
         handleImageAdded (file, Editor, cursorLocation) {
             let uploadTask1 = firestorage.ref('images/' + file.name).put(file)
@@ -204,32 +241,63 @@ const fb = require('@/firebaseConfig.js');
             if (this.$refs.form.validate()) {
                 var self = this
                 this.performingRequest = true;
-                // console.log(this.select.name)
-                fb.postsCollection.add({
-                    name: this.editedItem.name,
-                    slug: this.slug,
-                    content: this.editedItem.content,
-                    images: this.downloadURL,
-                    category:{
-                        id: this.editedItem.category.id,
-                        name:this.editedItem.category.name
-                    },
-                    status: this.editedItem.status,
-                    createdOn: new Date(),
-                    updatedOn: new Date()
-                    
-                }).then(ref => {
-                    this.performingRequest = false;
-                    self.$swal({
-                        title: "Success!",
-                        text: "Post Baru"+this.editedItem.name,
-                        icon: "success"
-                    });
-                    this.$router.push('/admin/post');
-                }).catch(err => {
-                    this.performingRequest = false;
-                    console.log(err)
-                })
+                if(this.downloadURL.length > 0)
+                {
+                    // console.log(this.select.name)
+                    fb.postsCollection.doc(this.$route.params.id).set({
+                        name: this.editedItem.name,
+                        slug: this.slug,
+                        content: this.editedItem.content,
+                        images: this.downloadURL,
+                        category:{
+                            id: this.editedItem.category.id,
+                            name:this.editedItem.category.name
+                        },
+                        status: this.editedItem.status,
+                        createdOn: this.editedItem.createdOn,
+                        updatedOn: new Date()
+                        
+                    }).then(ref => {
+                        this.performingRequest = false;
+                        self.$swal({
+                            title: "Success!",
+                            text: "Post Baru"+this.editedItem.name,
+                            icon: "success"
+                        });
+                        this.$router.push('/admin/post');
+                    }).catch(err => {
+                        this.performingRequest = false;
+                        console.log(err)
+                    })
+                }else{
+                    // console.log(this.select.name)
+                    fb.postsCollection.doc(this.$route.params.id).set({
+                        name: this.editedItem.name,
+                        slug: this.slug,
+                        content: this.editedItem.content,
+                        images: this.editedItem.images,
+                        category:{
+                            id: this.editedItem.category.id,
+                            name:this.editedItem.category.name
+                        },
+                        status: this.editedItem.status,
+                        createdOn: this.editedItem.createdOn,
+                        updatedOn: new Date()
+                        
+                    }).then(ref => {
+                        this.performingRequest = false;
+                        self.$swal({
+                            title: "Success!",
+                            text: "Post Baru"+this.editedItem.name,
+                            icon: "success"
+                        });
+                        this.$router.push('/admin/post');
+                    }).catch(err => {
+                        this.performingRequest = false;
+                        console.log(err)
+                    })
+                }
+                
             }
         }
     },
@@ -252,11 +320,22 @@ const fb = require('@/firebaseConfig.js');
         }
     },
     computed: {
-        ...mapState(['currentUser','categories']),
+        ...mapState(['currentUser','categories','posts']),
         slug: function() {
             var slug = this.sanitizeTitle(this.editedItem.name);
             return slug;
         }
+    },
+    created() {
+
+        fb.postsCollection.doc(this.$route.params.id).get().then(doc => {
+        let post = doc.data()
+            this.editedItem = post
+        }).catch(err => {
+            console.log(err)
+        })
+
+        
     }
   }
 </script>

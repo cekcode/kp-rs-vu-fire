@@ -67,11 +67,11 @@ export const store = new Vuex.Store({
             commit('setCategories', null)
         },
         fetchUserProfile({ commit, state }) {
-        fb.usersCollection.doc(state.currentUser.uid).get().then(res => {
-        commit('setUserProfile', res.data())
-        }).catch(err => {
-            console.log(err);
-        })
+            fb.usersCollection.doc(state.currentUser.uid).get().then(res => {
+                commit('setUserProfile', res.data());
+            }).catch(err => {
+                console.log(err);
+            })
         }
     },
     mutations: {

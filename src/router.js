@@ -102,6 +102,14 @@ const router = new Router({
                 requiresAuth: true
             },
             component: () => import('./components/admin/PostNew.vue')
+        },
+        {
+            path: '/admin/post/edit/:id',
+            name: 'post-edit',
+            meta: {
+                requiresAuth: true
+            },
+            component: () => import('./components/admin/PostEdit.vue')
         }
     ]
 });
